@@ -1,0 +1,76 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+int compare(const void *, const void *);
+int binary_search(int *, int, int);
+
+int main()
+{
+    int i = 10000;
+    srand(time(NULL));
+
+    printf("=================================================\n");
+    printf("|  Input Size  |  Binary Search Time (seconds) |\n");
+    printf("=================================================\n");
+
+    while (i <= 100000)
+    {
+
+        int *arr = (int *)malloc(i * sizeof(int));
+
+        // Generate random numbers
+        for (int j = 0; j < i; j++)
+        {
+            arr[j] = rand();
+        }
+
+        // Sort array using qsort (required for binary search)
+        qsort(arr, i, sizeof(int), compare);
+
+        int key = arr[i / 2]; // Search middle element
+
+        // Measure Binary Search time
+        clock_t start = clock();
+        binary_search(arr, i, key);
+        clock_t end = clock();
+
+        double search_time = (double)(end - start) / CLOCKS_PER_SEC;
+
+        printf("|  %-10d |  %-26f |\n", i, search_time);
+
+        free(arr);
+
+        i += 10000;
+    }
+
+    printf("=================================================\n");
+
+    return 0;
+}
+
+// Comparison function for qsort
+int compare(const void *a, const void *b)
+{
+    return (*(int *)a - *(int *)b);
+}
+
+// Binary Search Function
+int binary_search(int *a, int size, int key)
+{
+    int low = 0, high = size - 1;
+
+    while (low <= high)
+    {
+        int mid = (low + high) / 2;
+
+        if (a[mid] == key)
+            return mid;
+        else if (a[mid] < key)
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+
+    return -1; // Not found
+}

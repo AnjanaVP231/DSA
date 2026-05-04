@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 struct node
 {
     int data;
@@ -12,76 +11,75 @@ struct node *head = NULL;
 void create()
 {
     struct node *newnode, *temp;
-    int value;
-
-    newnode = (struct node*)malloc(sizeof(struct node));
-
-    printf("Enter value: ");
-    scanf("%d", &value);
-
-    newnode->data = value;
-    newnode->next = NULL;
-
-    if(head == NULL)
+    char ch;
+    do
     {
-        head = newnode;
-    }
-    else
-    {
-        temp = head;
+        newnode = (struct node*)malloc(sizeof(struct node));
+        printf("Enter value: ");
+        scanf("%d", &newnode->data);
 
-        while(temp->next != NULL)
+        newnode->next = NULL;
+
+        if(head == NULL)
         {
-            temp = temp->next;
+            head = newnode;
+        }
+        else
+        {
+            temp = head;
+            while(temp->next != NULL)
+                temp = temp->next;
+
+            temp->next = newnode;
         }
 
-        temp->next = newnode;
-    }
+        printf("Do you want to add another node? (y/n): ");
+        scanf(" %c", &ch);
+
+    } while(ch == 'y' || ch == 'Y');
 }
 
-void insertBeginning()
+/* -------- INSERT -------- */
+void insert_begin()
 {
     struct node *newnode;
-    int value;
 
     newnode = (struct node*)malloc(sizeof(struct node));
 
-    printf("Enter value: ");
-    scanf("%d", &value);
+    printf("Enter value to insert: ");
+    scanf("%d", &newnode->data);
 
-    newnode->data = value;
     newnode->next = head;
-
     head = newnode;
 }
 
-void deleteBeginning()
+/* -------- DELETE -------- */
+void delete_begin()
 {
     struct node *temp;
 
     if(head == NULL)
     {
-        printf("List Empty\n");
+        printf("List is Empty\n");
     }
     else
     {
         temp = head;
-
-        printf("Deleted element = %d\n", head->data);
+        printf("Deleted element = %d\n", temp->data);
 
         head = head->next;
-
         free(temp);
     }
 }
 
+/* -------- DISPLAY -------- */
 void display()
 {
     struct node *temp = head;
 
     if(head == NULL)
     {
-        printf("List Empty\n");
+        printf("List is Empty\n");
     }
     else
     {
@@ -89,50 +87,50 @@ void display()
 
         while(temp != NULL)
         {
-            printf("%d ", temp->data);
+            printf("%d -> ", temp->data);
             temp = temp->next;
         }
-
-        printf("\n");
+        printf("NULL\n");
     }
 }
 
+/* -------- MAIN -------- */
 int main()
 {
     int choice;
 
+    printf("Create Linked List\n");
+    create();   // compulsory creation first
+
     do
     {
-        printf("\n1.Create\n2.Insert Beginning\n3.Delete Beginning\n4.Display\n5.Exit\n");
+        printf("\n1.Insert\n2.Delete\n3.Display\n4.Exit\n");
         printf("Enter choice: ");
         scanf("%d", &choice);
 
         switch(choice)
         {
             case 1:
-                create();
+                insert_begin();
                 break;
 
             case 2:
-                insertBeginning();
+                delete_begin();
                 break;
 
             case 3:
-                deleteBeginning();
-                break;
-
-            case 4:
                 display();
                 break;
 
-            case 5:
+            case 4:
+                printf("Exiting...\n");
                 break;
 
             default:
-                printf("Invalid Choice\n");
+                printf("Invalid choice\n");
         }
 
-    } while(choice != 5);
+    } while(choice != 4);
 
     return 0;
 }

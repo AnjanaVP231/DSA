@@ -7,9 +7,39 @@ struct node
     struct node *next;
 };
 
-struct node *top = NULL;
+struct node *head = NULL;
 
-void push()
+void create()
+{
+    struct node *newnode, *temp;
+    int value;
+
+    newnode = (struct node*)malloc(sizeof(struct node));
+
+    printf("Enter value: ");
+    scanf("%d", &value);
+
+    newnode->data = value;
+    newnode->next = NULL;
+
+    if(head == NULL)
+    {
+        head = newnode;
+    }
+    else
+    {
+        temp = head;
+
+        while(temp->next != NULL)
+        {
+            temp = temp->next;
+        }
+
+        temp->next = newnode;
+    }
+}
+
+void insertBeginning()
 {
     struct node *newnode;
     int value;
@@ -20,26 +50,26 @@ void push()
     scanf("%d", &value);
 
     newnode->data = value;
-    newnode->next = top;
+    newnode->next = head;
 
-    top = newnode;
+    head = newnode;
 }
 
-void pop()
+void deleteBeginning()
 {
     struct node *temp;
 
-    if(top == NULL)
+    if(head == NULL)
     {
-        printf("Stack Empty\n");
+        printf("List Empty\n");
     }
     else
     {
-        temp = top;
+        temp = head;
 
-        printf("Deleted = %d\n", top->data);
+        printf("Deleted element = %d\n", head->data);
 
-        top = top->next;
+        head = head->next;
 
         free(temp);
     }
@@ -47,21 +77,23 @@ void pop()
 
 void display()
 {
-    struct node *temp = top;
+    struct node *temp = head;
 
-    if(top == NULL)
+    if(head == NULL)
     {
-        printf("Stack Empty\n");
+        printf("List Empty\n");
     }
     else
     {
-        printf("Stack Elements:\n");
+        printf("Linked List:\n");
 
         while(temp != NULL)
         {
-            printf("%d\n", temp->data);
+            printf("%d ", temp->data);
             temp = temp->next;
         }
+
+        printf("\n");
     }
 }
 
@@ -71,32 +103,36 @@ int main()
 
     do
     {
-        printf("\n1.Push\n2.Pop\n3.Display\n4.Exit\n");
+        printf("\n1.Create\n2.Insert Beginning\n3.Delete Beginning\n4.Display\n5.Exit\n");
         printf("Enter choice: ");
         scanf("%d", &choice);
 
         switch(choice)
         {
             case 1:
-                push();
+                create();
                 break;
 
             case 2:
-                pop();
+                insertBeginning();
                 break;
 
             case 3:
-                display();
+                deleteBeginning();
                 break;
 
             case 4:
+                display();
+                break;
+
+            case 5:
                 break;
 
             default:
                 printf("Invalid Choice\n");
         }
 
-    } while(choice != 4);
+    } while(choice != 5);
 
     return 0;
 }

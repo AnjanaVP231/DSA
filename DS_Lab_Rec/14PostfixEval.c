@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <ctype.h>
+#include <math.h>
 
-int stack[100];
-int top = -1;
+int stack[100], top = -1;
 
 void push(int x)
 {
@@ -17,13 +17,16 @@ int pop()
 int main()
 {
     char exp[100];
-    int i, op1, op2, result;
+    int i, op1, op2;
 
     printf("Enter postfix expression: ");
-    scanf("%s", exp);
+    fgets(exp, sizeof(exp), stdin);
 
     for(i = 0; exp[i] != '\0'; i++)
     {
+        if(exp[i] == ' ')
+            continue;
+
         if(isdigit(exp[i]))
         {
             push(exp[i] - '0');
@@ -50,13 +53,15 @@ int main()
                 case '/':
                     push(op1 / op2);
                     break;
+
+                case '^':
+                    push(pow(op1, op2));
+                    break;
             }
         }
     }
 
-    result = pop();
-
-    printf("Result = %d", result);
+    printf("Result = %d", pop());
 
     return 0;
 }

@@ -63,7 +63,7 @@ void display(struct node *head)
 
 struct node *add(struct node *poly1, struct node *poly2)
 {
-    struct node *result = NULL, *temp, *newnode;
+    struct node *result = NULL, *temp = NULL, *newnode;
 
     while(poly1 != NULL && poly2 != NULL)
     {
@@ -73,7 +73,6 @@ struct node *add(struct node *poly1, struct node *poly2)
         {
             newnode->coeff = poly1->coeff + poly2->coeff;
             newnode->exp = poly1->exp;
-
             poly1 = poly1->next;
             poly2 = poly2->next;
         }
@@ -81,39 +80,56 @@ struct node *add(struct node *poly1, struct node *poly2)
         {
             newnode->coeff = poly1->coeff;
             newnode->exp = poly1->exp;
-
             poly1 = poly1->next;
         }
         else
         {
             newnode->coeff = poly2->coeff;
             newnode->exp = poly2->exp;
-
             poly2 = poly2->next;
         }
 
         newnode->next = NULL;
 
         if(result == NULL)
-        {
-            result = newnode;
-        }
+            result = temp = newnode;
         else
         {
-            temp = result;
-
-            while(temp->next != NULL)
-            {
-                temp = temp->next;
-            }
-
             temp->next = newnode;
+            temp = newnode;
         }
+    }
+
+    // Copy remaining terms of first polynomial
+    while(poly1 != NULL)
+    {
+        newnode = (struct node*)malloc(sizeof(struct node));
+        newnode->coeff = poly1->coeff;
+        newnode->exp = poly1->exp;
+        newnode->next = NULL;
+
+        temp->next = newnode;
+        temp = newnode;
+
+        poly1 = poly1->next;
+    }
+
+    // Copy remaining terms of second polynomial
+    while(poly2 != NULL)
+    {
+        newnode = (struct node*)malloc(sizeof(struct node));
+        newnode->coeff = poly2->coeff;
+        newnode->exp = poly2->exp;
+        newnode->next = NULL;
+
+        temp->next = newnode;
+        temp = newnode;
+
+        poly2 = poly2->next;
     }
 
     return result;
 }
-
 int main()
 {
     struct node *poly1 = NULL, *poly2 = NULL, *result = NULL;
